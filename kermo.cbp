@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Kermo" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="parser WIN">
+				<Option output="kermo_parser" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-m32" />
+					<Add option="-DALONE_TEST" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="selektor LINUX">
+				<Option output="kermo" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-D_LARGEFILE_SOURCE" />
+					<Add option="-D_LARGEFILE64_SOURCE" />
+					<Add option="-D_THREAD_SAFE" />
+					<Add option="-D_REENTRANT" />
+				</Compiler>
+				<Linker>
+					<Add option="-lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm -lX11 -ljpeg" />
+				</Linker>
+			</Target>
+			<Target title="slektor WIN">
+				<Option output="ArcadeGameSelector" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-m32" />
+					<Add option="-DWIN32" />
+				</Compiler>
+				<Linker>
+					<Add option="-m32" />
+					<Add library="fltk_images" />
+					<Add library="fltk" />
+					<Add library="gdi32" />
+					<Add library="kernel32" />
+					<Add library="user32" />
+					<Add library="winspool" />
+					<Add library="comctl32" />
+					<Add library="advapi32" />
+					<Add library="shell32" />
+					<Add library="ws2_32" />
+					<Add library="odbc32" />
+					<Add library="ole32" />
+					<Add library="uuid" />
+					<Add library="comdlg32" />
+					<Add library="winmm" />
+					<Add library="fltk_jpeg" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DYY_NO_INPUT" />
+		</Compiler>
+		<Unit filename="gui.cpp">
+			<Option target="selektor LINUX" />
+			<Option target="slektor WIN" />
+		</Unit>
+		<Unit filename="gui.h">
+			<Option target="selektor LINUX" />
+			<Option target="slektor WIN" />
+		</Unit>
+		<Unit filename="kermo.h" />
+		<Unit filename="kermo.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="parser WIN" />
+			<Option target="slektor WIN" />
+		</Unit>
+		<Unit filename="lex.yy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="logic.c">
+			<Option compilerVar="CC" />
+			<Option target="selektor LINUX" />
+			<Option target="slektor WIN" />
+		</Unit>
+		<Unit filename="scan_codes.h" />
+		<Unit filename="selektor.cpp">
+			<Option target="selektor LINUX" />
+			<Option target="slektor WIN" />
+		</Unit>
+		<Unit filename="selektor.h">
+			<Option target="selektor LINUX" />
+			<Option target="slektor WIN" />
+		</Unit>
+		<Unit filename="y.tab.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="y.tab.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
