@@ -106,7 +106,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 292 "kermo.y" /* yacc.c:1909  */
+#line 294 "kermo.y" /* yacc.c:1909  */
 
    int n;
    char s[128];

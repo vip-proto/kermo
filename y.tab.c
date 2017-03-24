@@ -347,12 +347,14 @@ int main(int argc, char* argv[]) {
       yyparse();
       report();
    } else printf("Input file is not found!\n");
+
+   return !!err;
 }
 #endif
 
 
 
-#line 356 "y.tab.c" /* yacc.c:339  */
+#line 358 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -448,7 +450,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 292 "kermo.y" /* yacc.c:355  */
+#line 294 "kermo.y" /* yacc.c:355  */
 
    int n;
    char s[128];
@@ -456,7 +458,7 @@ union YYSTYPE
       short int r, s, t;
    } m;
 
-#line 460 "y.tab.c" /* yacc.c:355  */
+#line 462 "y.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -471,7 +473,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 475 "y.tab.c" /* yacc.c:358  */
+#line 477 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -771,11 +773,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   308,   308,   309,   312,   313,   316,   317,   320,   320,
-     323,   324,   327,   333,   334,   335,   341,   347,   353,   361,
-     362,   365,   365,   368,   369,   372,   379,   385,   386,   387,
-     402,   408,   416,   417,   417,   427,   441,   451,   456,   461,
-     467,   468,   471,   472,   475,   476,   477,   478,   479,   480
+       0,   310,   310,   311,   314,   315,   318,   319,   322,   322,
+     325,   326,   329,   335,   336,   337,   343,   349,   355,   363,
+     364,   367,   367,   370,   371,   374,   381,   387,   388,   389,
+     404,   410,   418,   419,   419,   429,   443,   453,   458,   463,
+     469,   470,   473,   474,   477,   478,   479,   480,   481,   482
 };
 #endif
 
@@ -1593,92 +1595,92 @@ yyreduce:
   switch (yyn)
     {
         case 8:
-#line 320 "kermo.y" /* yacc.c:1646  */
+#line 322 "kermo.y" /* yacc.c:1646  */
     { add_luncher((yyvsp[0].s)); }
-#line 1599 "y.tab.c" /* yacc.c:1646  */
+#line 1601 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 327 "kermo.y" /* yacc.c:1646  */
+#line 329 "kermo.y" /* yacc.c:1646  */
     {
               if (lunchers[l - 1].exe[0]) {
                  warnk("Luncher's EXE is duplicated, newer is applied!\n");
               }
               strcpy(lunchers[l - 1].exe, (yyvsp[0].s));
             }
-#line 1610 "y.tab.c" /* yacc.c:1646  */
+#line 1612 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 333 "kermo.y" /* yacc.c:1646  */
+#line 335 "kermo.y" /* yacc.c:1646  */
     { add_luncher_map(0); }
-#line 1616 "y.tab.c" /* yacc.c:1646  */
+#line 1618 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 334 "kermo.y" /* yacc.c:1646  */
+#line 336 "kermo.y" /* yacc.c:1646  */
     { add_luncher_map(1); }
-#line 1622 "y.tab.c" /* yacc.c:1646  */
+#line 1624 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 335 "kermo.y" /* yacc.c:1646  */
+#line 337 "kermo.y" /* yacc.c:1646  */
     {
                  int i;
                  for (i = 0; i < l - 1; i++)
                     lunchers[i].def = 0;
                   lunchers[l-1].def = 1;
               }
-#line 1633 "y.tab.c" /* yacc.c:1646  */
+#line 1635 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 341 "kermo.y" /* yacc.c:1646  */
+#line 343 "kermo.y" /* yacc.c:1646  */
     {
                    if (lunchers[l - 1].dir[0]) {
                       warnk("Luncher's DIR is duplicated, newer is applied!\n");
                    }
                    strcpy(lunchers[l - 1].dir, (yyvsp[0].s));
                 }
-#line 1644 "y.tab.c" /* yacc.c:1646  */
+#line 1646 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 347 "kermo.y" /* yacc.c:1646  */
+#line 349 "kermo.y" /* yacc.c:1646  */
     {
                     if (lunchers[l - 1].multip != -1) {
                        warnk("Luncher's MULTIPLAYER is duplicated, newer is applied!\n");
                     }
                     lunchers[n - 1].multip = (yyvsp[0].n);
                  }
-#line 1655 "y.tab.c" /* yacc.c:1646  */
+#line 1657 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 353 "kermo.y" /* yacc.c:1646  */
+#line 355 "kermo.y" /* yacc.c:1646  */
     {
                     if (lunchers[l - 1].screen != -1) {
                        warnk("Luncher's AUTOPICTURE is duplicated, newer is applied!\n");
                     }
                     lunchers[n - 1].screen = (yyvsp[0].n);
                  }
-#line 1666 "y.tab.c" /* yacc.c:1646  */
+#line 1668 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 365 "kermo.y" /* yacc.c:1646  */
+#line 367 "kermo.y" /* yacc.c:1646  */
     { add_entry((yyvsp[0].s)); }
-#line 1672 "y.tab.c" /* yacc.c:1646  */
+#line 1674 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 365 "kermo.y" /* yacc.c:1646  */
+#line 367 "kermo.y" /* yacc.c:1646  */
     { check_entry(); }
-#line 1678 "y.tab.c" /* yacc.c:1646  */
+#line 1680 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 372 "kermo.y" /* yacc.c:1646  */
+#line 374 "kermo.y" /* yacc.c:1646  */
     {
                    if (buffer[n-1].tit) {
                       warnk("TITLE is duplicated, newer is applied!\n");
@@ -1686,34 +1688,34 @@ yyreduce:
                    strcpy(buffer[n - 1].title, (yyvsp[0].s));
                    buffer[n - 1].tit = 1;
                 }
-#line 1690 "y.tab.c" /* yacc.c:1646  */
+#line 1692 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 379 "kermo.y" /* yacc.c:1646  */
+#line 381 "kermo.y" /* yacc.c:1646  */
     {
                    if (buffer[n - 1].exe[0]) {
                       warnk("EXE is duplicated, newer is applied!\n");
                    }
                    strcpy(buffer[n - 1].exe, (yyvsp[0].s));
                 }
-#line 1701 "y.tab.c" /* yacc.c:1646  */
+#line 1703 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 385 "kermo.y" /* yacc.c:1646  */
+#line 387 "kermo.y" /* yacc.c:1646  */
     { add_entry_map(0); }
-#line 1707 "y.tab.c" /* yacc.c:1646  */
+#line 1709 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 386 "kermo.y" /* yacc.c:1646  */
+#line 388 "kermo.y" /* yacc.c:1646  */
     { add_entry_map(1); }
-#line 1713 "y.tab.c" /* yacc.c:1646  */
+#line 1715 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 387 "kermo.y" /* yacc.c:1646  */
+#line 389 "kermo.y" /* yacc.c:1646  */
     {
                        int i, b;
                        b = 1;
@@ -1729,33 +1731,33 @@ yyreduce:
                           warnk("No LUNCHER %s defined, entry is ignored!\n", (yyvsp[0].s));
                        }
                     }
-#line 1733 "y.tab.c" /* yacc.c:1646  */
+#line 1735 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 402 "kermo.y" /* yacc.c:1646  */
+#line 404 "kermo.y" /* yacc.c:1646  */
     {
                     if (buffer[n - 1].multip != -1) {
                        warnk("MULTIPLAYER is duplicated, newer is applied!\n");
                     }
                     buffer[n - 1].multip = (yyvsp[0].n);
                  }
-#line 1744 "y.tab.c" /* yacc.c:1646  */
+#line 1746 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 408 "kermo.y" /* yacc.c:1646  */
+#line 410 "kermo.y" /* yacc.c:1646  */
     {
                     if (buffer[n - 1].screen != -1) {
                        warnk("AUTOPICTURE is duplicated, newer is applied!\n");
                     }
                     buffer[n - 1].screen = (yyvsp[0].n);
                  }
-#line 1755 "y.tab.c" /* yacc.c:1646  */
+#line 1757 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 417 "kermo.y" /* yacc.c:1646  */
+#line 419 "kermo.y" /* yacc.c:1646  */
     {
                  t = -4;
                  memset(tt, 0, sizeof(map_t));
@@ -1764,11 +1766,11 @@ yyreduce:
                  tt[2] = KEY_MOUSE_LEFT;
                  tt[3] = KEY_MOUSE_RIGHT;
               }
-#line 1768 "y.tab.c" /* yacc.c:1646  */
+#line 1770 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 427 "kermo.y" /* yacc.c:1646  */
+#line 429 "kermo.y" /* yacc.c:1646  */
     {
              if (t < 0) {
                 t = -t;
@@ -1783,11 +1785,11 @@ yyreduce:
              }
              t++;
           }
-#line 1787 "y.tab.c" /* yacc.c:1646  */
+#line 1789 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 441 "kermo.y" /* yacc.c:1646  */
+#line 443 "kermo.y" /* yacc.c:1646  */
     {
                      if (t < 16) {
                         tt[t] = (yyvsp[0].m).r;
@@ -1796,89 +1798,89 @@ yyreduce:
                      }
                      t++;
                   }
-#line 1800 "y.tab.c" /* yacc.c:1646  */
+#line 1802 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 451 "kermo.y" /* yacc.c:1646  */
+#line 453 "kermo.y" /* yacc.c:1646  */
     {
           (yyval.m).r = (yyvsp[0].n);
           (yyval.m).s = 0;
           (yyval.m).t = 0;
         }
-#line 1810 "y.tab.c" /* yacc.c:1646  */
+#line 1812 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 456 "kermo.y" /* yacc.c:1646  */
+#line 458 "kermo.y" /* yacc.c:1646  */
     {
                              (yyval.m).r = (yyvsp[-2].n);
                              (yyval.m).s = (yyvsp[-1].n);
                              (yyval.m).t = 0;
                          }
-#line 1820 "y.tab.c" /* yacc.c:1646  */
+#line 1822 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 461 "kermo.y" /* yacc.c:1646  */
+#line 463 "kermo.y" /* yacc.c:1646  */
     {
                                    (yyval.m).r = (yyvsp[-3].n);
                                    (yyval.m).s = (yyvsp[-2].n);
                                    (yyval.m).t = (yyvsp[-1].n);
                                 }
-#line 1830 "y.tab.c" /* yacc.c:1646  */
+#line 1832 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 467 "kermo.y" /* yacc.c:1646  */
+#line 469 "kermo.y" /* yacc.c:1646  */
     { config.theme = THEME_VIPPROTO; }
-#line 1836 "y.tab.c" /* yacc.c:1646  */
+#line 1838 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 468 "kermo.y" /* yacc.c:1646  */
+#line 470 "kermo.y" /* yacc.c:1646  */
     { config.theme = (yyvsp[-1].n); }
-#line 1842 "y.tab.c" /* yacc.c:1646  */
+#line 1844 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 475 "kermo.y" /* yacc.c:1646  */
+#line 477 "kermo.y" /* yacc.c:1646  */
     { config.bg_color = (yyvsp[0].n); }
-#line 1848 "y.tab.c" /* yacc.c:1646  */
+#line 1850 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 476 "kermo.y" /* yacc.c:1646  */
+#line 478 "kermo.y" /* yacc.c:1646  */
     { config.entry_bg_color = (yyvsp[0].n);}
-#line 1854 "y.tab.c" /* yacc.c:1646  */
+#line 1856 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 477 "kermo.y" /* yacc.c:1646  */
+#line 479 "kermo.y" /* yacc.c:1646  */
     { config.selected_entry_bg_color = (yyvsp[0].n); }
-#line 1860 "y.tab.c" /* yacc.c:1646  */
+#line 1862 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 478 "kermo.y" /* yacc.c:1646  */
+#line 480 "kermo.y" /* yacc.c:1646  */
     { config.text_color = (yyvsp[0].n); }
-#line 1866 "y.tab.c" /* yacc.c:1646  */
+#line 1868 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 479 "kermo.y" /* yacc.c:1646  */
+#line 481 "kermo.y" /* yacc.c:1646  */
     { config.selected_text_color = (yyvsp[0].n); }
-#line 1872 "y.tab.c" /* yacc.c:1646  */
+#line 1874 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 480 "kermo.y" /* yacc.c:1646  */
+#line 482 "kermo.y" /* yacc.c:1646  */
     { strncpy(config.jpeg_logo_file, (yyvsp[0].s), 128); }
-#line 1878 "y.tab.c" /* yacc.c:1646  */
+#line 1880 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1882 "y.tab.c" /* yacc.c:1646  */
+#line 1884 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2106,5 +2108,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 481 "kermo.y" /* yacc.c:1906  */
+#line 483 "kermo.y" /* yacc.c:1906  */
 

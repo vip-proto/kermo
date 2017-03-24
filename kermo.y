@@ -282,6 +282,8 @@ int main(int argc, char* argv[]) {
       yyparse();
       report();
    } else printf("Input file is not found!\n");
+
+   return !!err;
 }
 #endif
 
