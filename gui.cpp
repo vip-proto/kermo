@@ -85,11 +85,15 @@ void Form::screen_down() {
 }
 
 void Form::activate(Fl_Group* o) {
+   Fl_Box* title = (Fl_Box*)o->child(0);
    o->color(mk_color(config.selected_entry_bg_color));
+   title->labelcolor(mk_color(config.selected_text_color));
 }
 
 void Form::deactivate(Fl_Group* o) {
+   Fl_Box* title = (Fl_Box*)o->child(0);
    o->color(mk_color(config.entry_bg_color));
+   title->labelcolor(mk_color(config.text_color));
 }
 
 int Form::key_down(int key) {

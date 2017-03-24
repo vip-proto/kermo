@@ -45,6 +45,7 @@ struct gui_config config = {
                              .entry_bg_color = 0x0091bf,
                              .selected_entry_bg_color = 0xff0000,
                              .text_color = 0,
+                             .selected_text_color = 0,
                              .jpeg_logo_file = { 0 },
                            };
 
@@ -296,7 +297,7 @@ int main(int argc, char* argv[]) {
    } m;
 }
 
-%token OB CB TITLE EXE P1 P2 MOUSE DEFAULT LUNCHER DIR GUI BGCOLOR ENTRYCOLOR SELCOLOR TEXTCOLOR LOGOJPEG
+%token OB CB TITLE EXE P1 P2 MOUSE DEFAULT LUNCHER DIR GUI BGCOLOR ENTRYCOLOR SELCOLOR TEXTCOLOR SELTEXTCOLOR LOGOJPEG
 %token <n> KEY MULTIPLAYER AUTOPICTURE THEME COLOR
 %token <s> STRING PSTRING ISTRING LSTRING
 %type <m> mapper
@@ -475,5 +476,6 @@ cdef:
    | ENTRYCOLOR COLOR { config.entry_bg_color = $2;}
    | SELCOLOR COLOR { config.selected_entry_bg_color = $2; }
    | TEXTCOLOR COLOR { config.text_color = $2; }
+   | SELTEXTCOLOR COLOR { config.selected_text_color = $2; }
    | LOGOJPEG STRING { strncpy(config.jpeg_logo_file, $2, 128); };
 %%

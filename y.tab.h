@@ -60,16 +60,17 @@ extern int yydebug;
     ENTRYCOLOR = 270,
     SELCOLOR = 271,
     TEXTCOLOR = 272,
-    LOGOJPEG = 273,
-    KEY = 274,
-    MULTIPLAYER = 275,
-    AUTOPICTURE = 276,
-    THEME = 277,
-    COLOR = 278,
-    STRING = 279,
-    PSTRING = 280,
-    ISTRING = 281,
-    LSTRING = 282
+    SELTEXTCOLOR = 273,
+    LOGOJPEG = 274,
+    KEY = 275,
+    MULTIPLAYER = 276,
+    AUTOPICTURE = 277,
+    THEME = 278,
+    COLOR = 279,
+    STRING = 280,
+    PSTRING = 281,
+    ISTRING = 282,
+    LSTRING = 283
   };
 #endif
 /* Tokens.  */
@@ -88,23 +89,24 @@ extern int yydebug;
 #define ENTRYCOLOR 270
 #define SELCOLOR 271
 #define TEXTCOLOR 272
-#define LOGOJPEG 273
-#define KEY 274
-#define MULTIPLAYER 275
-#define AUTOPICTURE 276
-#define THEME 277
-#define COLOR 278
-#define STRING 279
-#define PSTRING 280
-#define ISTRING 281
-#define LSTRING 282
+#define SELTEXTCOLOR 273
+#define LOGOJPEG 274
+#define KEY 275
+#define MULTIPLAYER 276
+#define AUTOPICTURE 277
+#define THEME 278
+#define COLOR 279
+#define STRING 280
+#define PSTRING 281
+#define ISTRING 282
+#define LSTRING 283
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 291 "kermo.y" /* yacc.c:1909  */
+#line 292 "kermo.y" /* yacc.c:1909  */
 
    int n;
    char s[128];
@@ -112,7 +114,7 @@ union YYSTYPE
       short int r, s, t;
    } m;
 
-#line 116 "y.tab.h" /* yacc.c:1909  */
+#line 118 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

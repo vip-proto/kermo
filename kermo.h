@@ -69,6 +69,7 @@ struct gui_config {
    unsigned int entry_bg_color;
    unsigned int selected_entry_bg_color;
    unsigned int text_color;
+   unsigned int selected_text_color;
    char jpeg_logo_file[128];
 };
 
