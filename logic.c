@@ -515,27 +515,56 @@ static int screenshot(const char* dir, int pic_width, int pic_height, int num_ss
             if (y > y2) y2 = y;
          }
 
-   /* Quit if image is too small. */
-   if ((x2 - x1 < 100) || (y2 - y1 < 100))
-      goto end;
-
-   ptr = (unsigned int*)data + y1 * width + x1;
-   for (x = 0, y = y1; y <= y2; y++, x += x2 - x1 + 1, ptr += width)
-      memmove((unsigned int*)data + x, ptr, x2 - x1 + 1);
-
-   width = x2 - x1 + 1;
    height = y2 - y1 + 1;
+
+   /* Quit if image is too small. */
+   if ((x2 - x1 < 100) || (height < 100))
+      goto end;
 
    ret = choose_filename(dir, filename, num_ss);
    out = fopen(filename, "wb");
 
    if (out) {
+
       if ((pic_width == 0) && (pic_height == 0)) {
-         pic_width = width;
+         pic_width = x2 - x1 + 1;
          pic_height = height;
-      } else {
-         if (pic_width == 0) pic_width = width = width * pic_height / height;
-            else if (pic_height == 0) pic_height = height * pic_width / width;
+      } else if (pic_width == 0) {
+            pic_height = abs(pic_height);
+            pic_width = (x2 - x1 + 1) * pic_height / height;
+         } else if (pic_height == 0) {
+            pic_width = abs(pic_width);
+            pic_height = height * pic_width / (x2 - x1 + 1);
+         } else if ((pic_width < 0) && (pic_height < 0)) {
+            pic_width = -pic_width;
+            pic_height = -pic_height;
+            if (pic_width * height > pic_height * (x2 - x1 + 1)) {
+               pic_width = pic_height * (x2 - x1 + 1) / height;
+            } else if (pic_width * height < pic_height * (x2 - x1 + 1)) {
+               pic_height = pic_width * height / (x2 - x1 + 1);
+            }
+         } else {
+            if (pic_width < 0) {
+               pic_width = MIN((x2 - x1 + 1) * pic_height / height, -pic_width);
+            } else if (pic_height < 0) {
+               pic_height = MIN(height * pic_width / (x2 - x1 + 1), -pic_height);
+            }
+            if (pic_width * height < pic_height * (x2 - x1 + 1)) {
+               int new_pic_width = pic_width * height / pic_height - 1;
+               x1 += (x2 - x1 + 1 - new_pic_width) / 2;
+               x2 = new_pic_width + x1 - 1;
+            } else if (pic_width * height > pic_height * (x2 - x1 + 1)) {
+               height = pic_height * (x2 - x1 + 1) / pic_width;
+               y1 += (y2 - y1 + 1 - height) / 2;
+               x2 = height + y1 - 1;
+            }
+         }
+
+      if ((width != x2 - x1 + 1) || (y1 != 0)) {
+         ptr = (unsigned int*)data + y1 * width + x1;
+         for (x = 0, y = y1; y <= y2; y++, x += x2 - x1 + 1, ptr += width)
+            memmove((unsigned int*)data + x, ptr, (x2 - x1 + 1) << 2);
+         width = x2 - x1 + 1;
       }
 
       if  ((pic_width == width) && (pic_height == height)) {

@@ -56,7 +56,7 @@ Form::Form() : Fl_Double_Window(0, 0,
    this->labelsize(14);
    this->align(Fl_Align(FL_ALIGN_TOP));
    this->when(FL_WHEN_RELEASE);
-   Fl_Box* o = new Fl_Box(-3, 0, 1920, 315);
+   Fl_Box* o = new Fl_Box(0, 0, 1920, 315);
    o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
    o->color(mk_color(config.bg_color));
    o->image(&image_logoBW_hor_1920);
@@ -183,7 +183,7 @@ int ViP_Selector_Form::key_down(int key) {
       case 13:
       case 32:
          screen_down();
-         run_and_wait(&buffer[p], 0, 50, 5);
+         run_and_wait(&buffer[p], -89, 50, 5);
          refresh_pictures(&buffer[p]);
          screen_up();
          return 1;
@@ -249,14 +249,14 @@ Callidus_Cloud_Selector_Form::Callidus_Cloud_Selector_Form() : Form() {
          o->labelcolor(mk_color(config.text_color));
       }
       {
-         Fl_Box* o = new Fl_Box(-3 + 25 + 475 * (i & 3), 330 + 380 * ((i >> 2) & 1), 445, 300);
+         Fl_Box* o = new Fl_Box(25 + 475 * (i & 3), 330 + 380 * ((i >> 2) & 1), 445, 310);
          o->labelfont(1);
          o->labelsize(32);
          o->box(FL_NO_BOX);
-         o->align(Fl_Align(FL_ALIGN_TOP_LEFT | FL_ALIGN_INSIDE));
+         o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
       }
       if (buffer[i].multip) {
-         Fl_Box* o = new Fl_Box(-3 + 80 + 475 * (i & 3), 550 + 380 * ((i >> 2) & 1), 100, 100);
+         Fl_Box* o = new Fl_Box(50 + 475 * (i & 3), 540 + 380 * ((i >> 2) & 1), 100, 100);
          o->labelfont(1);
          o->labelsize(32);
          o->box(FL_NO_BOX);
@@ -322,7 +322,7 @@ int Callidus_Cloud_Selector_Form::key_down(int key) {
       case 13:
       case 32:
          screen_down();
-         run_and_wait(&buffer[p], 445, 0, 1);
+         run_and_wait(&buffer[p], -445, -310, 1);
          refresh_pictures(&buffer[p]);
          screen_up();
          return 1;
@@ -348,7 +348,7 @@ void Callidus_Cloud_Selector_Form::refresh_pictures(struct entry* ig, bool delet
    if (delete_only)
       return;
    sprintf(s, "./%s_0.jpg", ig->dir);
-   picture = read_and_resize_jpeg(s, 445, 0);
+   picture = read_and_resize_jpeg(s, 0, 0);
    if (picture) {
       o->image(new Picture(picture));
    }
