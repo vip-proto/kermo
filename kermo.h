@@ -26,6 +26,7 @@
 #define KERMO_H
 
 #include "scan_codes.h"
+#include <time.h>
 
 #define N 1024
 #define L 10
@@ -33,8 +34,8 @@
 typedef unsigned char map_t[48];
 
 struct full_map {
-  map_t p1;
-  map_t p2;
+   map_t p1;
+   map_t p2;
 };
 
 struct luncher {
@@ -70,6 +71,11 @@ struct gui_config {
    unsigned int selected_entry_bg_color;
    unsigned int text_color;
    unsigned int selected_text_color;
+   int starts_sort_factor;
+   int time_sort_factor;
+   int name_sort_factor;
+   int position_sort_factor;
+   int autoreload;
    char jpeg_logo_file[128];
 };
 
@@ -89,6 +95,10 @@ extern "C" {
 extern struct entry buffer[N];
 extern struct gui_config config;
 extern int n; // Number of entries
+extern int l; // Number of lunchers
+extern int err; // Number of errors
+extern int war; // Number of warnings
+extern const char* conf_filename;
 extern FILE *yyin;
 extern char need_ussage_print;
 extern void report();
@@ -98,8 +108,12 @@ extern int yyparse(void);
 /*** LOGIC & UTILITY ***/
 extern void send_reset();
 extern void send_map(const struct full_map *map);
-extern void run_and_wait(const struct entry *ig, int pic_width, int pic_height, int num_ss);
-extern struct picture_data* read_and_resize_jpeg(const char* filename, int width, int height);
+extern time_t run_and_wait(const struct entry *ig, int pic_width,
+                           int pic_height, int num_ss);
+extern struct picture_data* read_and_resize_jpeg(const char* filename,
+      int width, int height);
+extern void parse_conf(const char* conf_filename);
+
 #ifdef __cplusplus
 }
 #endif

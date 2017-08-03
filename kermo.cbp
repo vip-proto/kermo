@@ -65,6 +65,8 @@
 					<Add library="comdlg32" />
 					<Add library="winmm" />
 					<Add library="fltk_jpeg" />
+					<Add library="hid" />
+					<Add library="setupapi" />
 				</Linker>
 			</Target>
 		</Build>

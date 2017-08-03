@@ -28,6 +28,24 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Image.H>
+#include <stdint.h>
+
+struct Counters {
+#define C_MAGIC 0x41414141
+#define C_VERSION 1
+   uint32_t magic;
+   uint32_t size;
+   uint32_t version;
+   uint32_t starts;
+   uint32_t time;
+   void load(const char* filename);
+   void save(const char* filename);
+};
+
+struct Additional_Data {
+   Fl_Group* g;
+   Counters c;
+};
 
 class Picture : public Fl_RGB_Image {
 public:
@@ -43,7 +61,11 @@ public:
    virtual ~Form();
    void screen_up();
    void screen_down();
+   virtual void set_position(int p);
+   bool closing;
+   const int& position;
 protected:
+   int p;
    virtual void activate(Fl_Group* o);
    virtual void deactivate(Fl_Group* o);
    virtual int key_down(int key);
@@ -54,10 +76,11 @@ private:
 
 class ViP_Selector_Form : public Form {
 public:
-   int p, t, s;
    ViP_Selector_Form();
    virtual ~ViP_Selector_Form();
+   virtual void set_position(int p);
 protected:
+   int t, s;
    virtual int key_down(int key);
    virtual void refresh_pictures(struct entry* ig, bool delete_only = false);
    void scroll();
@@ -65,10 +88,11 @@ protected:
 
 class Callidus_Cloud_Selector_Form : public Form {
 public:
-   int p, t, s;
    Callidus_Cloud_Selector_Form();
    virtual ~Callidus_Cloud_Selector_Form();
+   virtual void set_position(int p);
 protected:
+   int t, s;
    virtual int key_down(int key);
    virtual void refresh_pictures(struct entry* ig, bool delete_only = false);
    void scroll();

@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "kermo.h"
-#include "y.tab.h"
+// #include "y.tab.h"
 
 struct entry buffer[N];
 struct luncher lunchers[L] = {
@@ -46,6 +46,11 @@ struct gui_config config = {
                              .selected_entry_bg_color = 0xff0000,
                              .text_color = 0,
                              .selected_text_color = 0,
+                             .starts_sort_factor = 0,
+                             .time_sort_factor = 0,
+                             .name_sort_factor = 0,
+                             .position_sort_factor = 0,
+                             .autoreload = 0,
                              .jpeg_logo_file = { 0 },
                            };
 
@@ -298,12 +303,11 @@ int main(int argc, char* argv[]) {
       short int r, s, t;
    } m;
 }
-
-%token OB CB TITLE EXE P1 P2 MOUSE DEFAULT LUNCHER DIR GUI BGCOLOR ENTRYCOLOR SELCOLOR TEXTCOLOR SELTEXTCOLOR LOGOJPEG
-%token <n> KEY MULTIPLAYER AUTOPICTURE THEME COLOR
+%token OB CB TITLE EXE P1 P2 MOUSE DEFAULT LUNCHER DIR GUI BGCOLOR ENTRYCOLOR SELCOLOR TEXTCOLOR SELTEXTCOLOR LOGOJPEG TIME_SORT_WEIGHT STARTS_SORT_WEIGHT TITLE_SORT_WEIGHT POSITION_SORT_WEIGHT AUTORELOAD
+%token <n> KEY MULTIPLAYER AUTOPICTURE THEME COLOR NUMBER
 %token <s> STRING PSTRING ISTRING LSTRING
 %type <m> mapper
-
+%type <n> number
 %%
 
 program:
@@ -473,11 +477,21 @@ cdefs:
    cdef
    | cdefs cdef;
 
+number:
+   NUMBER  { $$ = $1; }
+   | KEY   { $$ = $1; }
+   | COLOR { $$ = $1; };
+
 cdef:
    BGCOLOR COLOR { config.bg_color = $2; }
    | ENTRYCOLOR COLOR { config.entry_bg_color = $2;}
    | SELCOLOR COLOR { config.selected_entry_bg_color = $2; }
    | TEXTCOLOR COLOR { config.text_color = $2; }
    | SELTEXTCOLOR COLOR { config.selected_text_color = $2; }
-   | LOGOJPEG STRING { strncpy(config.jpeg_logo_file, $2, 128); };
+   | LOGOJPEG STRING { strncpy(config.jpeg_logo_file, $2, 128); }
+   | TIME_SORT_WEIGHT number { config.time_sort_factor = $2; }
+   | STARTS_SORT_WEIGHT number { config.starts_sort_factor = $2; }
+   | TITLE_SORT_WEIGHT number { config.name_sort_factor = $2; }
+   | POSITION_SORT_WEIGHT number { config.position_sort_factor = $2; }
+   | AUTORELOAD { config.autoreload = 1; }
 %%

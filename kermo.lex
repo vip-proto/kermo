@@ -49,6 +49,11 @@ SELCOLOR      return SELCOLOR;
 TEXTCOLOR     return TEXTCOLOR;
 SELTEXTCOLOR  return SELTEXTCOLOR;
 LOGOJPEG      return LOGOJPEG;
+"TIME_SORT_WEIGHT"     return TIME_SORT_WEIGHT;
+"STARTS_SORT_WEIGHT"   return STARTS_SORT_WEIGHT;
+"TITLE_SORT_WEIGHT"    return TITLE_SORT_WEIGHT;
+"POSITION_SORT_WEIGHT" return POSITION_SORT_WEIGHT;
+AUTORELOAD            return AUTORELOAD;
 VIPPROTO      { yylval.n = THEME_VIPPROTO; return THEME; }
 CALLIDUSCLOUD { yylval.n = THEME_CALLIDUSCLOUD; return THEME; }
 MULTIPLAYER   { yylval.n = 1; return MULTIPLAYER; }
@@ -164,6 +169,7 @@ NUM_3         { yylval.n = KEY_NUM_3; return KEY; }
 NUM_ENTER     { yylval.n = KEY_NUM_ENTER; return KEY; }
 NUM_0         { yylval.n = KEY_NUM_0; return KEY; }
 NUM_DEL       { yylval.n = KEY_NUM_DEL; return KEY; }
+[\-\+]?[0-9]+ { sscanf(yytext, "%d", &yylval.n); return NUMBER; }
 "0x"[0-9abcdefABCDEF]+ { sscanf(yytext + 2, "%x", &yylval.n); return COLOR; }
 
 "\""[^"\""\n\t]*"\"" {

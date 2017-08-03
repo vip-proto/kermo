@@ -25,17 +25,21 @@
 #include <stdio.h>
 
 #ifdef WIN32
-   #include <windows.h>
-   #include <FL/images/jpeglib.h>
-   /* Original libjpeg also can be used. */
+#include <windows.h>
+#include <FL/images/jpeglib.h>
+/* Original libjpeg also can be used. */
+#include <malloc.h>
+#include <setupapi.h>
+#include <ddk/Hidsdi.h>
+
 #else
-   #include <unistd.h>
-   #include <sys/wait.h>
-   #include <jpeglib.h>
-   #include <X11/Xlib.h>
-   #include <X11/X.h>
-   #include <X11/Xutil.h>
-   #include <errno.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <jpeglib.h>
+#include <X11/Xlib.h>
+#include <X11/X.h>
+#include <X11/Xutil.h>
+#include <errno.h>
 #endif
 
 #include <sys/stat.h>
@@ -49,37 +53,39 @@
 #define MIN(A,B) ((A > B) ? (B) : (A))
 
 static struct full_map def_map = {
-   .p1 = { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
-           KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
-           KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+   .p1 = {
+      KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
+      KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
+      KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
 
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
 
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE
-         },
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE
+   },
 
-   .p2 = { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
-           KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
-           KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+   .p2 = {
+      KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
+      KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
+      KEY_ENTER, KEY_ENTER, KEY_ENTER, KEY_ENTER,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
 
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
 
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
-           KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE
-         }
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE,
+      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE
+   }
 };
 
 void send_reset() {
@@ -334,28 +340,29 @@ static void write_jpeg(FILE *out,
 }
 
 static struct read_jpeg_error_struct {
-  struct jpeg_error_mgr err;
-  jmp_buf jmp_buffer;
+   struct jpeg_error_mgr err;
+   jmp_buf jmp_buffer;
 } jerr;
 
 static void read_jpeg_error_exit(j_common_ptr cinfo) {
-   struct read_jpeg_error_struct* err = (struct read_jpeg_error_struct*)(cinfo->err);
+   struct read_jpeg_error_struct* err = (struct read_jpeg_error_struct*)(
+                                           cinfo->err);
    longjmp(err->jmp_buffer, 1);
 }
 
-struct picture_data* read_and_resize_jpeg(const char* filename, int width, int height) {
+struct picture_data* read_and_resize_jpeg(const char* filename, int width,
+      int height) {
    FILE* in;
    unsigned char* buffer;
    int i;
-
    buffer = NULL;
    in = fopen(filename, "rb");
 
    if (in) {
       struct jpeg_decompress_struct cinfo;
-
       cinfo.err = jpeg_std_error(&jerr.err);
       jerr.err.error_exit = read_jpeg_error_exit;
+
       if (setjmp(jerr.jmp_buffer))
          goto end;
 
@@ -366,6 +373,7 @@ struct picture_data* read_and_resize_jpeg(const char* filename, int width, int h
 
       if (cinfo.output_components != 3)
          goto end;
+
       {
          buffer = (unsigned char*)malloc(3 * cinfo.output_width
                                          * cinfo.output_height +
@@ -384,7 +392,8 @@ struct picture_data* read_and_resize_jpeg(const char* filename, int width, int h
             height = cinfo.output_height;
          } else {
             if (width == 0) width = cinfo.output_width * height / cinfo.output_height;
-               else if (height == 0) height = cinfo.output_height * width  / cinfo.output_width;
+            else if (height == 0) height = cinfo.output_height * width  /
+                                              cinfo.output_width;
          }
 
          if ((width == cinfo.output_width) && (height == cinfo.output_height)) {
@@ -394,7 +403,8 @@ struct picture_data* read_and_resize_jpeg(const char* filename, int width, int h
             goto end;
          }
 
-         unsigned char* src = (unsigned char*)malloc(cinfo.output_width * cinfo.output_height * 4);
+         unsigned char* src = (unsigned char*)malloc(cinfo.output_width *
+                              cinfo.output_height * 4);
 
          for (i = 0; i < cinfo.output_width * cinfo.output_height; i++) {
             src[(i << 2) + 0] = buffer[3 * i + 0];
@@ -404,16 +414,16 @@ struct picture_data* read_and_resize_jpeg(const char* filename, int width, int h
          }
 
          free(buffer);
-
-         buffer = (unsigned char*)malloc(width * height * 4 + offsetof(struct picture_data, data));
-
-         resize_image(src, cinfo.output_width, cinfo.output_height, buffer + offsetof(struct picture_data, data), width, height, 1);
+         buffer = (unsigned char*)malloc(width * height * 4 + offsetof(
+                                            struct picture_data, data));
+         resize_image(src, cinfo.output_width, cinfo.output_height,
+                      buffer + offsetof(struct picture_data, data), width, height, 1);
          free(src);
          ((struct picture_data*)buffer)->bytes_per_pixel = 4;
          ((struct picture_data*)buffer)->width = width;
          ((struct picture_data*)buffer)->height = height;
       }
-      end:
+end:
       jpeg_destroy_decompress(&cinfo);
       fclose(in);
    }
@@ -444,7 +454,8 @@ static int choose_filename(const char *dir, char* filename, int num_ss) {
    return 0;
 }
 
-static int screenshot(const char* dir, int pic_width, int pic_height, int num_ss) {
+static int screenshot(const char* dir, int pic_width, int pic_height,
+                      int num_ss) {
    void *data;
    int width, height;
    char filename[128];
@@ -498,7 +509,6 @@ static int screenshot(const char* dir, int pic_width, int pic_height, int num_ss
       }
 
 #endif
-
    /* Auto crop */
    x1 = width - 1;
    x2 = 0;
@@ -510,8 +520,11 @@ static int screenshot(const char* dir, int pic_width, int pic_height, int num_ss
       for (x = 0; x < width; x++)
          if (ptr[x] & 0x00FFFFFF) {
             if (x < x1) x1 = x;
+
             if (x > x2) x2 = x;
+
             if (y < y1) y1 = y;
+
             if (y > y2) y2 = y;
          }
 
@@ -525,45 +538,48 @@ static int screenshot(const char* dir, int pic_width, int pic_height, int num_ss
    out = fopen(filename, "wb");
 
    if (out) {
-
       if ((pic_width == 0) && (pic_height == 0)) {
          pic_width = x2 - x1 + 1;
          pic_height = height;
       } else if (pic_width == 0) {
-            pic_height = abs(pic_height);
-            pic_width = (x2 - x1 + 1) * pic_height / height;
-         } else if (pic_height == 0) {
-            pic_width = abs(pic_width);
-            pic_height = height * pic_width / (x2 - x1 + 1);
-         } else if ((pic_width < 0) && (pic_height < 0)) {
-            pic_width = -pic_width;
-            pic_height = -pic_height;
-            if (pic_width * height > pic_height * (x2 - x1 + 1)) {
-               pic_width = pic_height * (x2 - x1 + 1) / height;
-            } else if (pic_width * height < pic_height * (x2 - x1 + 1)) {
-               pic_height = pic_width * height / (x2 - x1 + 1);
-            }
-         } else {
-            if (pic_width < 0) {
-               pic_width = MIN((x2 - x1 + 1) * pic_height / height, -pic_width);
-            } else if (pic_height < 0) {
-               pic_height = MIN(height * pic_width / (x2 - x1 + 1), -pic_height);
-            }
-            if (pic_width * height < pic_height * (x2 - x1 + 1)) {
-               int new_pic_width = pic_width * height / pic_height - 1;
-               x1 += (x2 - x1 + 1 - new_pic_width) / 2;
-               x2 = new_pic_width + x1 - 1;
-            } else if (pic_width * height > pic_height * (x2 - x1 + 1)) {
-               height = pic_height * (x2 - x1 + 1) / pic_width;
-               y1 += (y2 - y1 + 1 - height) / 2;
-               x2 = height + y1 - 1;
-            }
+         pic_height = abs(pic_height);
+         pic_width = (x2 - x1 + 1) * pic_height / height;
+      } else if (pic_height == 0) {
+         pic_width = abs(pic_width);
+         pic_height = height * pic_width / (x2 - x1 + 1);
+      } else if ((pic_width < 0) && (pic_height < 0)) {
+         pic_width = -pic_width;
+         pic_height = -pic_height;
+
+         if (pic_width * height > pic_height * (x2 - x1 + 1)) {
+            pic_width = pic_height * (x2 - x1 + 1) / height;
+         } else if (pic_width * height < pic_height * (x2 - x1 + 1)) {
+            pic_height = pic_width * height / (x2 - x1 + 1);
          }
+      } else {
+         if (pic_width < 0) {
+            pic_width = MIN((x2 - x1 + 1) * pic_height / height, -pic_width);
+         } else if (pic_height < 0) {
+            pic_height = MIN(height * pic_width / (x2 - x1 + 1), -pic_height);
+         }
+
+         if (pic_width * height < pic_height * (x2 - x1 + 1)) {
+            int new_pic_width = pic_width * height / pic_height - 1;
+            x1 += (x2 - x1 + 1 - new_pic_width) / 2;
+            x2 = new_pic_width + x1 - 1;
+         } else if (pic_width * height > pic_height * (x2 - x1 + 1)) {
+            height = pic_height * (x2 - x1 + 1) / pic_width;
+            y1 += (y2 - y1 + 1 - height) / 2;
+            x2 = height + y1 - 1;
+         }
+      }
 
       if ((width != x2 - x1 + 1) || (y1 != 0)) {
          ptr = (unsigned int*)data + y1 * width + x1;
+
          for (x = 0, y = y1; y <= y2; y++, x += x2 - x1 + 1, ptr += width)
             memmove((unsigned int*)data + x, ptr, (x2 - x1 + 1) << 2);
+
          width = x2 - x1 + 1;
       }
 
@@ -575,23 +591,41 @@ static int screenshot(const char* dir, int pic_width, int pic_height, int num_ss
          write_jpeg(out, 100, pic_width, pic_height, (JSAMPLE*)dest);
          free(dest);
       }
+
       fclose(out);
    }
-   end:
+
+end:
    free(data);
    return ret;
 }
 
-void run_and_wait(const struct entry *ig, int pic_width, int pic_height, int num_ss) {
+void parse_conf(const char* conf_filename) {
+   FILE *f = NULL;
+   f = fopen(conf_filename, "rt");
 
+   if (f) {
+      yyin = f;
+      n = 0;
+      l = 1;
+      err = 0;
+      war = 0;
+      yyparse();
+      fclose(f);
+   }
+}
+
+time_t run_and_wait(const struct entry *ig, int pic_width, int pic_height,
+                    int num_ss) {
+   time_t start;
    send_map(&ig->map);
-
    char* t = str_replace(ig->lunc->dir, "$GAME", ig->dir);
    char* dir = str_replace(t, "$EXE", ig->exe);
    free(t);
    t = str_replace(ig->lunc->exe, "$GAME", ig->dir);
    char* cmd = str_replace(t, "$EXE", ig->exe);
    free(t);
+   start = time(NULL);
 #ifdef WIN32
 
    do {
@@ -607,9 +641,11 @@ void run_and_wait(const struct entry *ig, int pic_width, int pic_height, int num
       }
 
       if (ig->screen) {
-         while (WaitForSingleObject(pi.hProcess, ((rand() % 3) + 1) * 60000) == WAIT_TIMEOUT)
+         while (WaitForSingleObject(pi.hProcess,
+                                    ((rand() % 3) + 1) * 60000) == WAIT_TIMEOUT)
             screenshot(ig->dir, pic_width, pic_height, num_ss);
       } else WaitForSingleObject(pi.hProcess, INFINITE);
+
       CloseHandle(pi.hProcess);
       CloseHandle(pi.hThread);
    } while (0);
@@ -650,16 +686,16 @@ void run_and_wait(const struct entry *ig, int pic_width, int pic_height, int num
          timeout.tv_nsec = 0;
 
          if (ig->screen) do {
-            timeout.tv_sec = ((rand() % 3) + 1) * 60;
+               timeout.tv_sec = ((rand() % 3) + 1) * 60;
 
-            if (sigtimedwait(&mask, NULL, &timeout) < 0)
-               if (errno == EAGAIN) {
-                  if (screenshot(ig->dir, pic_width, pic_height, num_ss))
-                     continue;
-               }
+               if (sigtimedwait(&mask, NULL, &timeout) < 0)
+                  if (errno == EAGAIN) {
+                     if (screenshot(ig->dir, pic_width, pic_height, num_ss))
+                        continue;
+                  }
 
-            break;
-         } while (1);
+               break;
+            } while (1);
 
          sigprocmask(SIG_SETMASK, &orig_mask, NULL);
          waitpid(pid, &status, 0);
@@ -675,11 +711,60 @@ void run_and_wait(const struct entry *ig, int pic_width, int pic_height, int num
    } while (0);
 
 #endif
+   start = time(NULL) - start;
    free(dir);
    free(cmd);
    send_reset();
+   return start;
 }
 
 void send_map(const struct full_map *map) {
-  // TODO
+   unsigned char* buf = (unsigned char*)alloca(sizeof(struct full_map) + 1);
+   buf[0] = 0x42;
+   memcpy(buf + 1, map, sizeof(struct full_map));
+#ifdef WIN32
+   DWORD n;
+   ULONG length, required;
+   PSP_DEVICE_INTERFACE_DETAIL_DATA detailData;
+   SP_DEVICE_INTERFACE_DATA devInfoData;
+   HANDLE hDevInfo;
+   HANDLE handle;
+   GUID hidGuid;
+   DWORD i;
+   HIDD_ATTRIBUTES attr;
+   HidD_GetHidGuid(&hidGuid);
+   hDevInfo = SetupDiGetClassDevs(&hidGuid, NULL, NULL,
+                                  DIGCF_PRESENT | DIGCF_INTERFACEDEVICE);
+   devInfoData.cbSize = sizeof(devInfoData);
+
+   for (i = 0; SetupDiEnumDeviceInterfaces(hDevInfo, 0, &hidGuid, i, &devInfoData);
+         i++) {
+      SetupDiGetDeviceInterfaceDetail(hDevInfo, &devInfoData, NULL, 0, &length, NULL);
+      detailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(length);
+      detailData -> cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+      SetupDiGetDeviceInterfaceDetail(hDevInfo, &devInfoData, detailData, length,
+                                      &required, NULL);
+      handle = CreateFile(detailData->DevicePath,
+                          GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+                          (LPSECURITY_ATTRIBUTES)NULL, OPEN_EXISTING, 0, NULL);
+
+      if (handle) {
+         memset(&attr, 0, sizeof(attr));
+         attr.Size = sizeof(attr);
+         HidD_GetAttributes(handle, &attr);
+
+         if ((attr.VendorID == 0x0000) && (attr.ProductID == 0xAA01)) {
+            if (WriteFile(handle, buf, sizeof(struct full_map) + 1, &n, NULL) == FALSE)
+               printf("Error sending output report error 0x%lX\n", GetLastError());
+
+            break;
+         }
+
+         CloseHandle(handle);
+      }
+
+      free(detailData);
+   }
+
+#endif
 }
